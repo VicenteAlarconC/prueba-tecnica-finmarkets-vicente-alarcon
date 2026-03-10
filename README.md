@@ -16,7 +16,7 @@ La entidad `Task` incluye los siguientes campos:
 
 ## 1. Clonar el repositorio e instalar dependencias
 
-Primero clona el proyecto e instala las dependencias necesarias:
+Primero clone el proyecto e instale las dependencias necesarias:
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -26,7 +26,7 @@ npm install
 
 ## 2. Crear un archivo `.env`
 
-Crea un archivo `.env` en la raíz del proyecto con la siguiente configuración:
+Cree un archivo `.env` en la raíz del proyecto con la siguiente configuración:
 
 ```env
 PORT= # Puerto en el que correrá la API
@@ -41,7 +41,7 @@ Asegurar de completar los valores con la configuración de tu entorno local.
 
 ## 3. (OPCIONAL) Usar Docker para PostgreSQL
 
-Si no tienes PostgreSQL instalado, puedes usar Docker para levantar una instancia rápidamente:
+Si no se tiene PostgreSQL instalado, puede usar Docker para levantar una instancia rápidamente:
 
 ```bash
 docker compose up -d
@@ -51,7 +51,7 @@ Esto levantará un contenedor con PostgreSQL configurado según el archivo `dock
 
 ## 4. Ejecutar la aplicación
 
-Finalmente, ejecuta la aplicación con el siguiente comando:
+Finalmente, ejecute la aplicación con el siguiente comando:
 
 ```bash
 npm run start
@@ -66,4 +66,12 @@ Para ejecutar las pruebas unitarias con Jest, usa el siguiente comando:
 ```bash
 npm run test
 ```
-Para ejecutar las pruebas de integración con Postman, puedes importar la colección de Postman incluida en el proyecto y ejecutar las solicitudes definidas para verificar el correcto funcionamiento de la API.
+Para ejecutar las pruebas de integración con Postman, se puede importar la colección de Postman incluida en el proyecto y ejecutar las solicitudes definidas para verificar el correcto funcionamiento de la API.
+
+## (OPCIONAL) Utilizar Docker para la aplicación
+Si desea ejecutar la aplicación dentro de un contenedor Docker, puedes usar el siguiente comando:
+
+```bash
+docker compose -f docker-compose.app.yaml up -d
+```
+Esto levantará tanto la base de datos PostgreSQL como la aplicación NestJS en contenedores separados, configurados para comunicarse entre sí. Hay que asegurarse de que los puertos y las variables de entorno estén correctamente configurados en el archivo `docker-compose.app.yaml` para que la aplicación pueda conectarse a la base de datos.

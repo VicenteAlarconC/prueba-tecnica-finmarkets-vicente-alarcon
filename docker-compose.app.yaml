@@ -1,0 +1,40 @@
+name: task_app
+
+services:
+  db_app:
+    image: postgres:16
+    container_name: tasks_postgres_app
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tasks_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_app:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tasks_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tasks_api
+    restart: unless-stopped
+    depends_on:
+      db_app:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db_app
+      PORT: 3001
+    ports:
+      - "3001:3001"
+
+volumes:
+  postgres_data_app:
