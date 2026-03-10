@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
   Index,
 } from 'typeorm';
-import { TaskPriority } from '../enum/task-priority.enum';
-import { TaskStatus } from '../enum/task-status.enum';
+import { TaskPriority } from '../enums/task-priority.enum';
+import { TaskStatus } from '../enums/task-status.enum';
 
 @Entity('Tasks')
 @Index(['status'])
