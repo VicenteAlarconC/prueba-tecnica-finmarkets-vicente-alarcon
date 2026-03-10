@@ -12,9 +12,13 @@ export class CreateTaskDto {
   @IsNotEmpty()
   description: string;
 
-  @IsEnum(TaskStatus)
+  @IsEnum(TaskStatus, {
+    message: 'status must be one of: pending, in_progress, done',
+  })
   status: TaskStatus;
 
-  @IsEnum(TaskPriority)
+  @IsEnum(TaskPriority, {
+    message: 'priority must be one of: low, medium, high',
+  })
   priority: TaskPriority;
 }
