@@ -34,3 +34,25 @@
 > Lo resolvería a nivel de base de datos, no solo con lógica en memoria. Haría la compra dentro de una transacción y bloquearía la fila del producto o del inventario antes de descontar stock, por ejemplo con un lock pesimista de escritura. PostgreSQL documenta que los row-level locks bloquean a otros escritores sobre esa misma fila hasta el fin de la transacción, y TypeORM soporta esto con setLock("pessimistic_write").
 >
 > El flujo sería: abrir transacción, leer el producto con lock, verificar que stock > 0, descontar 1, guardar y confirmar. Si otro usuario intenta comprar al mismo tiempo, tendrá que esperar o fallar, según la estrategia (nowait o esperar). Esto garantiza que solo un usuario pueda comprar el último producto disponible, evitando condiciones de carrera y asegurando la integridad de los datos.
+
+## Análisis y Debugging
+
+### 1) Identifique al menos 5 problemas de arquitectura o diseño.
+
+> **R:**
+>
+> 1. **No existe persistencia real de las órdenes.**  
+>    `private orders = []` no es una solución escalable ni confiable, ya que los datos se perderán al reiniciar la aplicación y no se podrán compartir entre múltiples instancias de la aplicación.
+> 2. **No se manejan errores ni excepciones correctamente.**  
+>    Si el id no existe, no se controla ese caso y la aplicación podría fallar devolviendo un error interno en lugar de una respuesta adecuada, como un 404 Not Found.
+> 3. **No existen DTOs ni validación de entrada.**  
+>    Los datos se reciben sin ningún tipo de validación, lo que puede afectar la estabilidad, la seguridad y la consistencia de la aplicación.
+> 4. **No hay control sobre los estados permitidos.**  
+>    No existe un enum ni una validación formal para status, por lo que se podrían guardar valores inválidos, generando comportamientos inesperados en la lógica del sistema.
+> 5. **La función findAll() no contempla paginación ni filtrado.**  
+>    Si la cantidad de órdenes creciera, devolver todos los registros en una sola respuesta sería ineficiente y poco escalable.
+
+### 2) Explique cómo refactorizaría esta implementación en un proyecto real de NestJS.
+
+> **R:**  
+> En un proyecto real de NestJS, refactorizaría esta implementación separando claramente las responsabilidades dentro de un OrdersModule, con su respectivo OrdersController, OrdersService y una capa de persistencia bien definida. Reemplazaría el arreglo en memoria por una base de datos real utilizando una entidad Order y un repositorio con TypeORM o Prisma, de manera que la información sea persistente, consistente y escalable. Además, crearía DTOs como CreateOrderDto y UpdateOrderStatusDto para validar la entrada de datos con class-validator, y definiría un enum para restringir los estados permitidos de la orden. También implementaría un manejo adecuado de errores HTTP, por ejemplo lanzando una NotFoundException cuando una orden no exista, en lugar de dejar que la aplicación falle con un error interno. Finalmente, agregaría tipado fuerte y una estructura clara para la entidad, incluyendo campos como id, status, createdAt y updatedAt, lo que permitiría tener un sistema más mantenible, testeable y preparado para crecer.
