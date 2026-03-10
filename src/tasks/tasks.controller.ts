@@ -38,8 +38,8 @@ export class TasksController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTaskDto: UpdateTaskDto,
-  ) {
-    return this.tasksService.update(+id, updateTaskDto);
+  ): Promise<Task> {
+    return this.tasksService.update(id, updateTaskDto);
   }
 
   @Delete(':id')

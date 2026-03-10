@@ -46,8 +46,17 @@ export class TasksService {
     return task;
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
+    const task = await this.tasksRepository.preload({
+      id,
+      ...updateTaskDto,
+    });
+
+    if (!task) {
+      throw new NotFoundException(`Task with id ${id} not found`);
+    }
+
+    return this.tasksRepository.save(task);
   }
 
   remove(id: number) {
