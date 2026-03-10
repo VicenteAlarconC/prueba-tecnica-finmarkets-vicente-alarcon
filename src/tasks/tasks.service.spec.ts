@@ -107,6 +107,8 @@ describe('TasksService', () => {
       const result = await service.findAll({
         status: TaskStatus.PENDING,
         priority: TaskPriority.HIGH,
+        page: 2,
+        offset: 5,
       });
 
       expect(mockRepository.find).toHaveBeenCalledWith({
@@ -117,6 +119,8 @@ describe('TasksService', () => {
         order: {
           createdAt: 'DESC',
         },
+        skip: 5,
+        take: 5,
       });
       expect(result).toEqual(tasks);
     });
@@ -135,6 +139,8 @@ describe('TasksService', () => {
         order: {
           createdAt: 'DESC',
         },
+        skip: 0,
+        take: 10,
       });
       expect(result).toEqual(tasks);
     });
@@ -145,6 +151,8 @@ describe('TasksService', () => {
 
       const result = await service.findAll({
         priority: TaskPriority.MEDIUM,
+        page: 3,
+        offset: 20,
       });
 
       expect(mockRepository.find).toHaveBeenCalledWith({
@@ -154,6 +162,8 @@ describe('TasksService', () => {
         order: {
           createdAt: 'DESC',
         },
+        skip: 40,
+        take: 20,
       });
       expect(result).toEqual(tasks);
     });

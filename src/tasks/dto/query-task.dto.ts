@@ -2,8 +2,9 @@ import { IsEnum, IsOptional } from 'class-validator';
 import { TaskPriority } from '../enums/task-priority.enum';
 import { TaskStatus } from '../enums/task-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginationDto } from '../../common/dto/pagination.dto';
 
-export class QueryTaskDto {
+export class QueryTaskDto extends PaginationDto {
   @ApiProperty({
     description: 'Filtra las tareas por estado.',
     example: 'pending',

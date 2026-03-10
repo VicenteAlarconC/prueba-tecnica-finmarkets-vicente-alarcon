@@ -77,3 +77,4 @@ Si desea ejecutar la aplicación dentro de un contenedor Docker, puedes usar el 
 docker compose -f docker-compose.app.yaml up -d
 ```
 Esto levantará tanto la base de datos PostgreSQL como la aplicación NestJS en contenedores separados, configurados para comunicarse entre sí. Hay que asegurarse de que los puertos y las variables de entorno estén correctamente configurados en el archivo `docker-compose.app.yaml` para que la aplicación pueda conectarse a la base de datos.
+Estará disponible en `http://localhost:3000`.

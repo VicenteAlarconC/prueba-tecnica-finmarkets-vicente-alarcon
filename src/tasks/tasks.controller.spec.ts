@@ -119,6 +119,8 @@ describe('TasksController', () => {
         .query({
           status: TaskStatus.PENDING,
           priority: TaskPriority.HIGH,
+          page: 2,
+          offset: 5,
         })
         .expect(200);
 
@@ -126,6 +128,8 @@ describe('TasksController', () => {
       expect(mockTasksService.findAll).toHaveBeenCalledWith({
         status: TaskStatus.PENDING,
         priority: TaskPriority.HIGH,
+        page: 2,
+        offset: 5,
       });
       expect(mockTasksService.findAll).toHaveBeenCalledTimes(1);
     });
@@ -136,6 +140,18 @@ describe('TasksController', () => {
         .query({
           status: 'wrong',
           priority: 'wrong',
+        })
+        .expect(400);
+
+      expect(mockTasksService.findAll).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when pagination params are invalid', async () => {
+      await request(app.getHttpServer())
+        .get('/tasks')
+        .query({
+          page: 0,
+          offset: -1,
         })
         .expect(400);
 

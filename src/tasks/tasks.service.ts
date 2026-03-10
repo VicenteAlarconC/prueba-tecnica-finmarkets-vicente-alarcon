@@ -32,19 +32,22 @@ export class TasksService {
 
   // Obtiene tareas aplicando filtros opcionales por estado y prioridad.
   async findAll(filters: QueryTaskDto): Promise<Task[]> {
+    const { page = 1, offset = 10, status, priority } = filters;
     const where: FindOptionsWhere<Task> = {};
 
-    if (filters.status) {
-      where.status = filters.status;
+    if (status) {
+      where.status = status;
     }
 
-    if (filters.priority) {
-      where.priority = filters.priority;
+    if (priority) {
+      where.priority = priority;
     }
 
     return this.tasksRepository.find({
       where,
       order: { createdAt: 'DESC' },
+      skip: (page - 1) * offset,
+      take: offset,
     });
   }
 

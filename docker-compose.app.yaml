@@ -32,9 +32,9 @@ services:
       - .env
     environment:
       DB_HOST: db_app
-      PORT: 3001
+      PORT: 3000
     ports:
-      - "3001:3001"
+      - "3000:3000"
 
 volumes:
   postgres_data_app:
