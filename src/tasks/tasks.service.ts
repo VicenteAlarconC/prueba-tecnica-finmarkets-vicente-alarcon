@@ -4,7 +4,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { QueryTaskDto } from './dto/query-task.dto';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
@@ -16,8 +16,23 @@ export class TasksService {
     return 'This action adds a new task';
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  async findAll(filters: QueryTaskDto): Promise<Task[]> {
+    const where: FindOptionsWhere<Task> = {};
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.priority) {
+      where.priority = filters.priority;
+    }
+
+    return this.tasksRepository.find({
+      where,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async findOne(id: string): Promise<Task> {
