@@ -20,6 +20,7 @@ export class TasksService {
     private readonly tasksRepository: Repository<Task>,
   ) {}
 
+  // Construye y persiste una nueva tarea en la base de datos.
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     try {
       const task = this.tasksRepository.create(createTaskDto);
@@ -29,6 +30,7 @@ export class TasksService {
     }
   }
 
+  // Obtiene tareas aplicando filtros opcionales por estado y prioridad.
   async findAll(filters: QueryTaskDto): Promise<Task[]> {
     const where: FindOptionsWhere<Task> = {};
 
@@ -46,6 +48,7 @@ export class TasksService {
     });
   }
 
+  // Busca una tarea por ID y lanza error si no existe.
   async findOne(id: string): Promise<Task> {
     const task = await this.tasksRepository.findOneBy({ id });
 
@@ -56,6 +59,7 @@ export class TasksService {
     return task;
   }
 
+  // Precarga los cambios sobre una tarea existente y los guarda.
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task> {
     const task = await this.tasksRepository.preload({
       id,
@@ -73,6 +77,7 @@ export class TasksService {
     }
   }
 
+  // Reutiliza la actualizacion general para modificar solo el estado.
   async updateStatus(
     id: string,
     updateTaskStatusDto: UpdateTaskStatusDto,
@@ -80,6 +85,7 @@ export class TasksService {
     return this.update(id, { status: updateTaskStatusDto.status });
   }
 
+  // Elimina una tarea y valida que realmente exista antes de confirmar el borrado.
   async remove(id: string): Promise<void> {
     try {
       const result = await this.tasksRepository.delete(id);
@@ -95,6 +101,7 @@ export class TasksService {
     }
   }
 
+  // Traduce errores de infraestructura a excepciones HTTP controladas.
   private handleDbError(error: unknown): never {
     if (error instanceof QueryFailedError) {
       throw new InternalServerErrorException('Database operation failed');

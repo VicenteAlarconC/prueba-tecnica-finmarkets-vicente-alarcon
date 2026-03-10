@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryTaskDto {
   @ApiProperty({
-    description: 'Filter tasks by status',
+    description: 'Filtra las tareas por estado.',
     example: 'pending',
     enum: TaskStatus,
     required: false,
@@ -15,7 +15,7 @@ export class QueryTaskDto {
   status?: TaskStatus;
 
   @ApiProperty({
-    description: 'Filter tasks by priority',
+    description: 'Filtra las tareas por prioridad.',
     example: 'medium',
     enum: TaskPriority,
     required: false,

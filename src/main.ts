@@ -6,6 +6,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Aplica validaciones globales sobre DTOs y transforma los tipos entrantes.
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -15,8 +16,10 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Tasks API')
-    .setDescription('The tasks API description')
+    .setTitle('API de Tareas')
+    .setDescription(
+      'Documentacion de la API para crear, consultar, actualizar y eliminar tareas.',
+    )
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);

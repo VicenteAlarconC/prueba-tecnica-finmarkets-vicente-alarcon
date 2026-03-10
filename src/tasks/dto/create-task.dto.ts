@@ -5,8 +5,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTaskDto {
   @ApiProperty({
-    description: 'Title of the task',
-    example: 'Buy groceries',
+    description: 'Titulo de la tarea.',
+    example: 'Comprar viveres',
   })
   @IsString()
   @IsNotEmpty()
@@ -14,30 +14,30 @@ export class CreateTaskDto {
   title: string;
 
   @ApiProperty({
-    description: 'Description of the task',
-    example: 'Buy milk, eggs, and bread from the supermarket',
+    description: 'Descripcion detallada de la tarea.',
+    example: 'Comprar leche, huevos y pan en el supermercado',
   })
   @IsString()
   @IsNotEmpty()
   description: string;
 
   @ApiProperty({
-    description: 'Status of the task',
+    description: 'Estado inicial de la tarea.',
     example: 'pending',
     enum: TaskStatus,
   })
   @IsEnum(TaskStatus, {
-    message: 'status must be one of: pending, in_progress, done',
+    message: 'status debe ser uno de los siguientes valores: pending, in_progress, done',
   })
   status: TaskStatus;
 
   @ApiProperty({
-    description: 'Priority of the task',
+    description: 'Nivel de prioridad de la tarea.',
     example: 'medium',
     enum: TaskPriority,
   })
   @IsEnum(TaskPriority, {
-    message: 'priority must be one of: low, medium, high',
+    message: 'priority debe ser uno de los siguientes valores: low, medium, high',
   })
   priority: TaskPriority;
 }

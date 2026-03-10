@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateTaskStatusDto {
   @ApiProperty({
-    description: 'New status of the task',
+    description: 'Nuevo estado que se asignara a la tarea.',
     example: 'in_progress',
     enum: TaskStatus,
   })
