@@ -59,6 +59,8 @@ npm run start
 
 La API estará disponible en `http://localhost:3000` por defecto, pero puedes cambiar el puerto en el archivo `.env`.
 
+### Además, la documentación de la API estará disponible en `http://localhost:3000/api` gracias a Swagger, lo que facilita la exploración y prueba de los endpoints disponibles.
+
 ## 5. Ejecutar pruebas en Jest y con Postman
 
 Para ejecutar las pruebas unitarias con Jest, usa el siguiente comando:
