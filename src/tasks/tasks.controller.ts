@@ -14,6 +14,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { QueryTaskDto } from './dto/query-task.dto';
 import { Task } from './entities/task.entity';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -40,6 +41,14 @@ export class TasksController {
     @Body() updateTaskDto: UpdateTaskDto,
   ): Promise<Task> {
     return this.tasksService.update(id, updateTaskDto);
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+  ): Promise<Task> {
+    return this.tasksService.updateStatus(id, updateTaskStatusDto);
   }
 
   @Delete(':id')
