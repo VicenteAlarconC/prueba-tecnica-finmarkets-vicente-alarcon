@@ -1,11 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { QueryFailedError } from 'typeorm';
+
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { QueryTaskDto } from './dto/query-task.dto';
-import { Task } from './entities/task.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { Task } from './entities/task.entity';
 
 @Injectable()
 export class TasksService {
@@ -13,9 +19,14 @@ export class TasksService {
     @InjectRepository(Task)
     private readonly tasksRepository: Repository<Task>,
   ) {}
+
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
-    const task = this.tasksRepository.create(createTaskDto);
-    return this.tasksRepository.save(task);
+    try {
+      const task = this.tasksRepository.create(createTaskDto);
+      return await this.tasksRepository.save(task);
+    } catch (error) {
+      this.handleDbError(error);
+    }
   }
 
   async findAll(filters: QueryTaskDto): Promise<Task[]> {
@@ -31,9 +42,7 @@ export class TasksService {
 
     return this.tasksRepository.find({
       where,
-      order: {
-        createdAt: 'DESC',
-      },
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -57,7 +66,11 @@ export class TasksService {
       throw new NotFoundException(`Task with id ${id} not found`);
     }
 
-    return this.tasksRepository.save(task);
+    try {
+      return await this.tasksRepository.save(task);
+    } catch (error) {
+      this.handleDbError(error);
+    }
   }
 
   async updateStatus(
@@ -68,10 +81,25 @@ export class TasksService {
   }
 
   async remove(id: string): Promise<void> {
-    const result = await this.tasksRepository.delete(id);
+    try {
+      const result = await this.tasksRepository.delete(id);
 
-    if (!result.affected) {
-      throw new NotFoundException(`Task with id ${id} not found`);
+      if (!result.affected) {
+        throw new NotFoundException(`Task with id ${id} not found`);
+      }
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      this.handleDbError(error);
     }
+  }
+
+  private handleDbError(error: unknown): never {
+    if (error instanceof QueryFailedError) {
+      throw new InternalServerErrorException('Database operation failed');
+    }
+
+    throw new InternalServerErrorException('Unexpected server error');
   }
 }
